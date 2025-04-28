@@ -1,0 +1,2 @@
+# ArchOCR
+Engineering thesis project
