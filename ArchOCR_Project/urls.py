@@ -14,18 +14,21 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
 
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-#     path('', include('ArchOCR.urls')),
-# ]
 from django.contrib import admin
 from django.urls import path, include  # Importujemy include do obsługi URL-i aplikacji
+from ArchOCR import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),  # Panel administracyjny Django
     path('', include('ArchOCR.urls')),  # Mapowanie na URL-e aplikacji ArchOCR
+
+    path('process_image/', views.process_image, name='process_image'),
+
+    # Wbudowane widoki logowania/wylogowania/zmiany hasła itp.:
+    path('accounts/', include('django.contrib.auth.urls')),
+
+    # Rejestracja (nasz widok):
+    path('accounts/signup/', views.signup, name='signup'),
 ]
 

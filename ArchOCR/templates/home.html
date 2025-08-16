@@ -72,12 +72,16 @@
 </head>
 <body>
     <nav>
-        <div>
-            <a href="#">Moje Konto / Zaloguj</a>
-            <a href="#">O Projekcie</a>
-            <a href="#">Czytaj Stronę</a>
-        </div>
+      <a href="{% url 'home' %}">Start</a>
+      {% if request.user.is_authenticated %}
+        <span>Witaj, {{ request.user.username }}!</span>
+        <a href="{% url 'logout' %}">Wyloguj</a>
+      {% else %}
+        <a href="{% url 'login' %}">Zaloguj</a>
+        <a href="{% url 'signup' %}">Rejestracja</a>
+      {% endif %}
     </nav>
+
     <div class="container">
         <!-- Lewa sekcja: Zdjęcie -->
         <div class="image-section">

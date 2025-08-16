@@ -1,7 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 import pytesseract
 from PIL import Image
+from django.contrib.auth import login
+from django.contrib import messages
+from .forms import SignUpForm
 
 def home(request):
     """Strona główna"""
@@ -17,3 +20,14 @@ def process_image(request):
     return JsonResponse({'error': 'Niepoprawne żądanie!'}, status=400)
 
 
+def signup(request):
+    if request.method == "POST":
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()            # tworzy użytkownika + hasło (hash)
+            messages.success(request, "Konto utworzone. Zalogowano.")
+            login(request, user)          # automatyczne logowanie po rejestracji
+            return redirect("home")
+    else:
+        form = SignUpForm()
+    return render(request, "registration/signup.html", {"form": form})
