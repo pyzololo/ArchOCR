@@ -1,13 +1,12 @@
-<!doctype html>
-<html>
-<head><meta charset="utf-8"><title>Rejestracja</title></head>
-<body>
-  <h1>Rejestracja</h1>
-  <form method="post" action="{% url 'signup' %}">
+{% extends "base.html" %}
+
+{% block title %}Rejestracja · ArchOCR{% endblock %}
+
+{% block content %}
+  <h2>Utwórz konto</h2>
+  <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Utwórz konto</button>
+    <button type="submit">Zarejestruj</button>
   </form>
-  <p>Masz już konto? <a href="{% url 'login' %}">Zaloguj się</a></p>
-</body>
-</html>
+{% endblock %}

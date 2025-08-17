@@ -1,154 +1,164 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ArchOCR</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        nav {
-            width: 100%;
-            background-color: #333;
-            color: white;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-        }
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 10px;
-        }
-        nav a:hover {
-            text-decoration: underline;
-        }
-        .container {
-            display: flex;
-            width: 100%;
-            height: calc(100vh - 50px);
-        }
-        .image-section, .text-section {
-            flex: 1;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-        .image-section {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f0f0f0;
-        }
-        .text-section {
-            padding: 20px;
-            overflow-y: auto; /* Umożliwia przewijanie */
-            height: 100%; /* Wysokość wypełnia całą dostępną przestrzeń */
-            box-sizing: border-box;
-        }
-        #text-container {
-            border: 1px solid #aaa;
-            height: 70%; /* Stała wysokość okienka */
-            padding: 10px;
-            overflow-y: scroll; /* Dodaje pasek przewijania */
-            background-color: #f9f9f9;
-            box-sizing: border-box;
-        }
-        #uploaded-image {
-            max-width: 100%;
-            max-height: 100%;
-        }
-        #model-selector {
-            width: 100%;
-            margin-top: 10px;
-            padding: 5px;
-        }
-    </style>
-</head>
-<body>
-    <nav>
-      <a href="{% url 'home' %}">Start</a>
-      {% if request.user.is_authenticated %}
-        <span>Witaj, {{ request.user.username }}!</span>
-        <a href="{% url 'my_scans' %}">Moje skany</a>
-        <a href="{% url 'logout' %}">Wyloguj</a>
-      {% else %}
-        <a href="{% url 'login' %}">Zaloguj</a>
-        <a href="{% url 'signup' %}">Rejestracja</a>
-      {% endif %}
-    </nav>
+{% extends "base.html" %}
 
-    <div class="container">
-        <!-- Lewa sekcja: Zdjęcie -->
-        <div class="image-section">
-            <form id="upload-form">
-                <input type="file" id="image-input" accept="image/*">
-                <button type="submit">Prześlij</button>
-            </form>
-            <img id="uploaded-image" alt="Przesłane zdjęcie">
-        </div>
+{% block title %}Strona główna · ArchOCR{% endblock %}
 
-        <!-- Prawa sekcja: Tekst -->
-        <div class="text-section">
-            <h3>Rozpoznany tekst:</h3>
-            <div id="text-container">
-                <p id="recognized-text">Wynik pojawi się tutaj...</p>
-            </div>
-            <!-- Dropdown do wyboru modelu -->
-            <label for="model-selector">Wybierz model:</label>
-            <select id="model-selector">
-                <option value="model1">Model 1</option>
-                <option value="model2">Model 2</option>
-                <option value="model3">Model 3</option>
-            </select>
-        </div>
-    </div>
+{% block content %}
+  <h1>Witaj w ArchOCR!</h1>
+  <p>Ta aplikacja pozwala rozpoznawać tekst z ksiąg metrykalnych.</p>
+{% endblock %}
 
-    <script>
-        const uploadForm = document.getElementById('upload-form');
-        const imageInput = document.getElementById('image-input');
-        const uploadedImage = document.getElementById('uploaded-image');
-        const recognizedText = document.getElementById('recognized-text');
-        const modelSelector = document.getElementById('model-selector');
 
-        uploadForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const file = imageInput.files[0];
-            const selectedModel = modelSelector.value; // Pobierz wybrany model
-            if (!file) {
-                alert('Wybierz plik przed przesłaniem!');
-                return;
-            }
-
-            // Wyświetlanie przesłanego obrazu
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                uploadedImage.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-
-            // Przesyłanie obrazu i modelu do serwera
-            const formData = new FormData();
-            formData.append('image', file);
-            formData.append('model', selectedModel); // Dodaj wybrany model
-
-            const response = await fetch('/process_image/', {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                recognizedText.textContent = data.text;
-            } else {
-                recognizedText.textContent = 'Wystąpił błąd podczas przetwarzania obrazu.';
-            }
-        });
-    </script>
-</body>
-</html>
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <title>ArchOCR</title>#}
+{#    <style>#}
+{#        body {#}
+{#            font-family: Arial, sans-serif;#}
+{#            margin: 0;#}
+{#            padding: 0;#}
+{#            display: flex;#}
+{#            flex-direction: column;#}
+{#            align-items: center;#}
+{#        }#}
+{#        nav {#}
+{#            width: 100%;#}
+{#            background-color: #333;#}
+{#            color: white;#}
+{#            padding: 10px 20px;#}
+{#            display: flex;#}
+{#            justify-content: space-between;#}
+{#        }#}
+{#        nav a {#}
+{#            color: white;#}
+{#            text-decoration: none;#}
+{#            margin: 0 10px;#}
+{#        }#}
+{#        nav a:hover {#}
+{#            text-decoration: underline;#}
+{#        }#}
+{#        .container {#}
+{#            display: flex;#}
+{#            width: 100%;#}
+{#            height: calc(100vh - 50px);#}
+{#        }#}
+{#        .image-section, .text-section {#}
+{#            flex: 1;#}
+{#            border: 1px solid #ccc;#}
+{#            box-sizing: border-box;#}
+{#        }#}
+{#        .image-section {#}
+{#            display: flex;#}
+{#            justify-content: center;#}
+{#            align-items: center;#}
+{#            background-color: #f0f0f0;#}
+{#        }#}
+{#        .text-section {#}
+{#            padding: 20px;#}
+{#            overflow-y: auto; /* Umożliwia przewijanie */#}
+{#            height: 100%; /* Wysokość wypełnia całą dostępną przestrzeń */#}
+{#            box-sizing: border-box;#}
+{#        }#}
+{#        #text-container {#}
+{#            border: 1px solid #aaa;#}
+{#            height: 70%; /* Stała wysokość okienka */#}
+{#            padding: 10px;#}
+{#            overflow-y: scroll; /* Dodaje pasek przewijania */#}
+{#            background-color: #f9f9f9;#}
+{#            box-sizing: border-box;#}
+{#        }#}
+{#        #uploaded-image {#}
+{#            max-width: 100%;#}
+{#            max-height: 100%;#}
+{#        }#}
+{#        #model-selector {#}
+{#            width: 100%;#}
+{#            margin-top: 10px;#}
+{#            padding: 5px;#}
+{#        }#}
+{#    </style>#}
+{#</head>#}
+{#<body>#}
+{#    <nav>#}
+{#      <a href="{% url 'home' %}">Start</a>#}
+{#      {% if request.user.is_authenticated %}#}
+{#        <span>Witaj, {{ request.user.username }}!</span>#}
+{#        <a href="{% url 'my_scans' %}">Moje skany</a>#}
+{#        <a href="{% url 'logout' %}">Wyloguj</a>#}
+{#      {% else %}#}
+{#        <a href="{% url 'login' %}">Zaloguj</a>#}
+{#        <a href="{% url 'signup' %}">Rejestracja</a>#}
+{#      {% endif %}#}
+{#    </nav>#}
+{##}
+{#    <div class="container">#}
+{#        <!-- Lewa sekcja: Zdjęcie -->#}
+{#        <div class="image-section">#}
+{#            <form id="upload-form">#}
+{#                <input type="file" id="image-input" accept="image/*">#}
+{#                <button type="submit">Prześlij</button>#}
+{#            </form>#}
+{#            <img id="uploaded-image" alt="Przesłane zdjęcie">#}
+{#        </div>#}
+{##}
+{#        <!-- Prawa sekcja: Tekst -->#}
+{#        <div class="text-section">#}
+{#            <h3>Rozpoznany tekst:</h3>#}
+{#            <div id="text-container">#}
+{#                <p id="recognized-text">Wynik pojawi się tutaj...</p>#}
+{#            </div>#}
+{#            <!-- Dropdown do wyboru modelu -->#}
+{#            <label for="model-selector">Wybierz model:</label>#}
+{#            <select id="model-selector">#}
+{#                <option value="model1">Model 1</option>#}
+{#                <option value="model2">Model 2</option>#}
+{#                <option value="model3">Model 3</option>#}
+{#            </select>#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#    <script>#}
+{#        const uploadForm = document.getElementById('upload-form');#}
+{#        const imageInput = document.getElementById('image-input');#}
+{#        const uploadedImage = document.getElementById('uploaded-image');#}
+{#        const recognizedText = document.getElementById('recognized-text');#}
+{#        const modelSelector = document.getElementById('model-selector');#}
+{##}
+{#        uploadForm.addEventListener('submit', async (e) => {#}
+{#            e.preventDefault();#}
+{#            const file = imageInput.files[0];#}
+{#            const selectedModel = modelSelector.value; // Pobierz wybrany model#}
+{#            if (!file) {#}
+{#                alert('Wybierz plik przed przesłaniem!');#}
+{#                return;#}
+{#            }#}
+{##}
+{#            // Wyświetlanie przesłanego obrazu#}
+{#            const reader = new FileReader();#}
+{#            reader.onload = (e) => {#}
+{#                uploadedImage.src = e.target.result;#}
+{#            };#}
+{#            reader.readAsDataURL(file);#}
+{##}
+{#            // Przesyłanie obrazu i modelu do serwera#}
+{#            const formData = new FormData();#}
+{#            formData.append('image', file);#}
+{#            formData.append('model', selectedModel); // Dodaj wybrany model#}
+{##}
+{#            const response = await fetch('/process_image/', {#}
+{#                method: 'POST',#}
+{#                body: formData,#}
+{#            });#}
+{##}
+{#            if (response.ok) {#}
+{#                const data = await response.json();#}
+{#                recognizedText.textContent = data.text;#}
+{#            } else {#}
+{#                recognizedText.textContent = 'Wystąpił błąd podczas przetwarzania obrazu.';#}
+{#            }#}
+{#        });#}
+{#    </script>#}
+{#</body>#}
+{#</html>#}

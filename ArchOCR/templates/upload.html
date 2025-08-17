@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Dodaj skan · ArchOCR{% endblock %}
+
+{% block content %}
+  <h2>Dodaj skan</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="card">
+      <label>Plik obrazu (JPG/PNG):</label><br>
+      <input type="file" name="image" accept="image/*" required>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <label>Model rozpoznawania:</label><br>
+      <select name="model_name">
+        <option value="baseline">Baseline</option>
+        <option value="trocr-large">TrOCR Large</option>
+        <option value="custom-hwr">Custom HWR</option>
+      </select>
+    </div>
+
+    <button type="submit" style="margin-top:12px;">Wyślij i rozpoznaj</button>
+  </form>
+{% endblock %}

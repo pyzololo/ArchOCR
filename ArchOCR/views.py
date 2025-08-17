@@ -6,8 +6,8 @@ from django.contrib.auth import login
 from django.contrib import messages
 from .forms import SignUpForm
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from .models import ScanPage
+from .models import ScanPage, Translation
+from django.utils import timezone
 
 
 def home(request):
@@ -15,14 +15,18 @@ def home(request):
     return render(request, 'home.html')
 
 
-def process_image(request):
-    """Przetwarzanie obrazu i zwracanie tekstu OCR"""
-    if request.method == 'POST' and request.FILES.get('image'):
-        image_file = request.FILES['image']
-        image = Image.open(image_file)
-        recognized_text = pytesseract.image_to_string(image)
-        return JsonResponse({'text': recognized_text})
-    return JsonResponse({'error': 'Niepoprawne żądanie!'}, status=400)
+@login_required
+def upload_scan(request):
+    if request.method == "POST":
+        image = request.FILES.get("image")
+        model_name = request.POST.get("model_name") or "baseline"
+        if image:
+            page = ScanPage.objects.create(owner=request.user, image=image, uploaded_at=timezone.now())
+            # Tu robimy OCR – na razie test
+            recognized = "Sample OCR result..."  # <-- tu wstawisz właściwe rozpoznanie
+            Translation.objects.create(page=page, model_name=model_name, text=recognized)
+            return redirect("my_scans")
+    return render(request, "upload.html")
 
 
 def signup(request):
@@ -40,5 +44,7 @@ def signup(request):
 
 @login_required
 def my_scans(request):
-    scans = ScanPage.objects.filter(owner=request.user).prefetch_related("translations")
+    scans = ScanPage.objects\
+        .filter(owner=request.user)\
+        .prefetch_related("translations")
     return render(request, "my_scans.html", {"scans": scans})
