@@ -1,0 +1,23 @@
+{% block content %}
+  <h2>Moje skany</h2>
+
+  {% if scans %}
+    <ul>
+      {% for scan in scans %}
+        <li>
+          <strong>{{ scan.image.name }}</strong><br>
+          Dodano: {{ scan.uploaded_at }}<br>
+
+          {% if scan.translations.all %}
+            Ostatnie tłumaczenie:
+            {{ scan.translations.last.text|truncatechars:100 }}
+          {% else %}
+            Brak tłumaczeń
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Nie masz jeszcze żadnych skanów.</p>
+  {% endif %}
+{% endblock %}

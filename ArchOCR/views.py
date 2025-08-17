@@ -5,10 +5,15 @@ from PIL import Image
 from django.contrib.auth import login
 from django.contrib import messages
 from .forms import SignUpForm
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from .models import ScanPage
+
 
 def home(request):
     """Strona główna"""
     return render(request, 'home.html')
+
 
 def process_image(request):
     """Przetwarzanie obrazu i zwracanie tekstu OCR"""
@@ -31,3 +36,9 @@ def signup(request):
     else:
         form = SignUpForm()
     return render(request, "registration/signup.html", {"form": form})
+
+
+@login_required
+def my_scans(request):
+    scans = ScanPage.objects.filter(owner=request.user).prefetch_related("translations")
+    return render(request, "my_scans.html", {"scans": scans})

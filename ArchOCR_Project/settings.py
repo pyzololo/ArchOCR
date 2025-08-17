@@ -29,7 +29,11 @@ ALLOWED_HOSTS = []
 
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
-LOGIN_URL = "login"                  # w przypadku, gdy @login_required
+LOGIN_URL = "login"                  # used in case when @login_required
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
 # Application definition
 
 INSTALLED_APPS = [

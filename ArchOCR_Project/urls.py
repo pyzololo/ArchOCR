@@ -18,6 +18,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include  # Importujemy include do obsługi URL-i aplikacji
 from ArchOCR import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),  # Panel administracyjny Django
@@ -32,3 +34,5 @@ urlpatterns = [
     path('accounts/signup/', views.signup, name='signup'),
 ]
 
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

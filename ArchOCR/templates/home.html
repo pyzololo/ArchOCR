@@ -75,6 +75,7 @@
       <a href="{% url 'home' %}">Start</a>
       {% if request.user.is_authenticated %}
         <span>Witaj, {{ request.user.username }}!</span>
+        <a href="{% url 'my_scans' %}">Moje skany</a>
         <a href="{% url 'logout' %}">Wyloguj</a>
       {% else %}
         <a href="{% url 'login' %}">Zaloguj</a>
