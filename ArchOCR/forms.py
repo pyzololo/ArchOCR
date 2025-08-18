@@ -4,8 +4,9 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
 class SignUpForm(UserCreationForm):
-    email = forms.EmailField(required=False)  # opcjonalne pole e-mail
+    email = forms.EmailField(required=False)
 
     class Meta:
         model = User
