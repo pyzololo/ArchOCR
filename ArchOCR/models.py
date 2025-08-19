@@ -13,6 +13,11 @@ class ScanPage(models.Model):
     class Meta:
         ordering = ["-uploaded_at"]
 
+    def __str__(self):
+        filename = self.image.name.split('/')[-1] if self.image else "—"
+        short_id = str(self.id)[:8]
+        return f"{short_id}, {self.owner}, {filename}, {self.uploaded_at:%Y-%m-%d %H:%M}"
+
 
 class Translation(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -24,4 +29,7 @@ class Translation(models.Model):
     class Meta:
         ordering = ["-created_at"]
 
+    def __str__(self):
+        preview = (self.text[:40] + "…") if self.text and len(self.text) > 40 else (self.text or "")
+        return f"{self.model_name}, {self.created_at:%Y-%m-%d %H:%M}, {preview}"
 
